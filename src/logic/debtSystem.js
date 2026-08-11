@@ -1,35 +1,19 @@
-import { DEBT_PAYMENT_RELIEF, DEBT_RATIO, FLOOR_BY_CYCLE, MAX_CYCLES } from '../config.js'
+import { FLOOR_BY_CYCLE, MAX_CYCLES } from '../config.js'
 
-// U.S.D 부채 시스템(B 구조). USD-spec/USD_debt_system.md의 명세를 그대로 옮긴 순수 함수들이다.
-//
-// 두 축으로 나눈다:
-// - 최소 상환액(minPayment): 매 주기 반드시 내야 하는 금액. 계속 오른다(압박 유지). 선상환과 무관.
-// - 총 부채(debt): 갚아야 할 전체 원금. 이자 없이 실제 상환한 만큼만 줄어든다.
-//
-// 선상환의 보상은 총 부채를 더 크게 낮춰 완주를 앞당기거나 조기 클리어하는 것으로 나타난다.
-
-// 이번 주기의 최소 상환액. Math.max(부채 비례분, 상승 하한) — 하한이 매 주기 계속 오르므로
-// 선상환으로 부채 비례분이 작아져도 압박이 유지된다.
-// 하한은 지수식이 아니라 실측으로 조정한 계단형 배열(FLOOR_BY_CYCLE)을 그대로 찾아 쓴다.
+// 주차별 최소 상환액은 처음부터 공개된 고정 계단을 따른다.
+// 총부채에는 계약 수수료가 이미 포함되어 있으며, 진행 중 이자나 추가 수수료는 붙지 않는다.
+// 추가 상환은 남은 부채를 그대로 줄이므로 초반 선상환이 후반 부담을 실질적으로 낮춘다.
 export function getMinPayment(debt, cycle) {
-  // 하한만 ₡1,000 낮추면 1주차처럼 부채 비례분이 더 큰 구간은 전혀 쉬워지지 않는다.
-  // 비례분에도 같은 완화값을 빼서 어느 경로에서도 기존 계산보다 정확히 ₡1,000 낮춘다.
-  const proportional = Math.max(0, Math.round(debt * DEBT_RATIO) - DEBT_PAYMENT_RELIEF)
-  const floor = FLOOR_BY_CYCLE[cycle - 1] ?? FLOOR_BY_CYCLE.at(-1)
-  return Math.min(debt, Math.max(proportional, floor))
+  const scheduledPayment = FLOOR_BY_CYCLE[cycle - 1] ?? FLOOR_BY_CYCLE.at(-1)
+  return Math.min(debt, scheduledPayment)
 }
 
-// 주기 말 정산. payAmount는 플레이어가 실제로 낸 금액(선상환 포함 가능)이다.
-// 반환값:
-// - { gameOver: true } — 최소 상환액 미달
-// - { cleared: true }  — 부채 전액 상환(6주차 전 조기 클리어 포함) 또는 6주차 완주
-// - { debt, nextCycle } — 다음 주기로 진행 (실제 상환 후 남은 원금)
 export function computeSettlement(debt, cycle, payAmount) {
   const minPayment = getMinPayment(debt, cycle)
 
   if (payAmount < minPayment) return { gameOver: true }
 
-  let remaining = debt - payAmount
+  const remaining = debt - payAmount
   if (remaining <= 0) return { cleared: true }
 
   if (cycle >= MAX_CYCLES) return { gameOver: true, remainingDebt: remaining }

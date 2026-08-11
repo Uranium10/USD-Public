@@ -51,8 +51,8 @@ function AccountStrip({ target }) {
     <div><small>총자산</small><strong>₡12,500</strong></div>
     <div><small>현금</small><strong>₡12,500</strong></div>
     <div><small>마이닝 OFFLINE</small><strong className="cyan">0.0000 DUST</strong></div>
-    <div className={target === 'debt' ? 'tutorial-focus' : ''}><small>총 부채</small><strong className="red">₡165,000</strong></div>
-    <div className={target === 'debt' ? 'tutorial-focus' : ''}><small>주간 목표 상환액</small><strong className="red">₡20,000</strong></div>
+    <div className={target === 'debt' ? 'tutorial-focus' : ''}><small>총 부채</small><strong className="red">₡233,800</strong></div>
+    <div className={target === 'debt' ? 'tutorial-focus' : ''}><small>주간 목표 상환액</small><strong className="red">₡18,800</strong></div>
   </section>
 }
 
@@ -119,7 +119,7 @@ function NightMock() {
   return <div className="tutorial-night-screen">
     <img src="/imgs/bg/Tarae/room_night_1.png" alt="타래의 밤 방" />
     <header className="room-title"><b>U.S.D</b><span>UNPAID SPACE DEBT</span></header>
-    <aside className="room-status"><b>1주차 · 1일차</b><span>현금 ₡12,500</span><span>총부채 ₡165,000</span><span>최소상환 ₡20,000</span></aside>
+    <aside className="room-status"><b>1주차 · 1일차</b><span>현금 ₡12,500</span><span>총부채 ₡233,800</span><span>최소상환 ₡18,800</span></aside>
     <section className="night-desktop tutorial-night-desktop tutorial-static-focus">
       <header><div><p className="eyebrow">NIGHT SHIFT</p><h2>1주차 1일차 밤</h2></div><div className="energy-meter"><span>활동력 100/100</span><progress max="100" value="100" /></div></header>
       <nav className="night-tabs"><button className="active">활동</button><button>상점</button><button>인벤토리 (0)</button></nav>

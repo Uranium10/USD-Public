@@ -7,6 +7,7 @@ import {
   DAYS_PER_CYCLE,
   DAY_DURATION_SECONDS,
   FLOOR_BY_CYCLE,
+  INITIAL_DEBT,
   JOB_REWARD,
   LISTED_COMPANY_COUNT,
   MARKET_ASSET_COUNT,
@@ -31,8 +32,9 @@ const quantile = (values, ratio) => [...values].sort((left, right) => left - rig
 const weekSeconds = DAY_DURATION_SECONDS * DAYS_PER_CYCLE
 
 assert(DAY_DURATION_SECONDS === 240, '낮 스테이지는 4분(240초)이어야 합니다.')
-assert(FLOOR_BY_CYCLE.join(',') === '18000,23000,29000,39000,53000,71000', '주차별 최소 상환 하한이 ₡1,000씩 완화되지 않았습니다.')
-assert(getMinPayment(165000, 1) === 18800, '부채 비례분이 적용되는 1주차도 기존보다 ₡1,000 낮아야 합니다.')
+assert(FLOOR_BY_CYCLE.join(',') === '18800,23000,29000,39000,53000,71000', '주차별 최소 상환 곡선이 의도한 값과 다릅니다.')
+assert(INITIAL_DEBT === FLOOR_BY_CYCLE.reduce((sum, value) => sum + value, 0), '총부채는 6주 최소 상환액의 합과 같아야 합니다.')
+assert(getMinPayment(INITIAL_DEBT, 1) === 18800, '1주차 최소 상환액이 ₡18,800이어야 합니다.')
 // 하루 길이를 절반으로 줄이면서 채굴 레이트를 2배로 올려 하루/주차당 경제 규모를 보존했다.
 // 이 두 값은 항상 함께 움직여야 하므로 곱을 직접 검증한다(T.0 기준 하루 ₡180).
 assert(

@@ -5,6 +5,7 @@ import {
   HACKING_DECK_COSTS,
   MAX_ENERGY,
   SISYPHUS_STOCK_ID,
+  INITIAL_DEBT,
 } from '../src/config.js'
 import { generateMarketCycle } from '../src/data/generateMarket.js'
 import { NIGHT_ACTIVITIES, NIGHT_ITEMS } from '../src/data/nightContent.js'
@@ -55,10 +56,10 @@ assert(chooseWeeklyModifier(2, 2026)?.id === modifier2.id, '같은 seed의 주�
 assert(chooseWeeklyModifier(1, 2026) === null && chooseWeeklyModifier(7, 2026) === null, '1·7주차에는 일반 모디파이어가 없어야 합니다.')
 assert(getWeeklyModifier(modifier2.id)?.detail, '주간 모디파이어의 안내 문구가 없습니다.')
 assert(modifiedRumorCost({ cost: 100 }, 'information-crackdown') === 75, '정보 단속 가격 보정이 잘못됐습니다.')
-const firstMinimumPayment = getMinPayment(165000, 1)
-const debtAfterMinimum = computeSettlement(165000, 1, firstMinimumPayment).debt
-const debtAfterExtra = computeSettlement(165000, 1, firstMinimumPayment + 5000).debt
-assert(debtAfterMinimum === 165000 - firstMinimumPayment, '상환 후 총부채에 이자가 다시 붙습니다.')
+const firstMinimumPayment = getMinPayment(INITIAL_DEBT, 1)
+const debtAfterMinimum = computeSettlement(INITIAL_DEBT, 1, firstMinimumPayment).debt
+const debtAfterExtra = computeSettlement(INITIAL_DEBT, 1, firstMinimumPayment + 5000).debt
+assert(debtAfterMinimum === INITIAL_DEBT - firstMinimumPayment, '상환 후 총부채에 이자가 다시 붙습니다.')
 assert(debtAfterExtra === debtAfterMinimum - 5000, '추가 상환액이 총부채에서 그대로 차감되지 않습니다.')
 const briefingRumors = [{ id: 'old' }, { id: 'new' }]
 assert(selectBriefingRumors(briefingRumors, ['new']).length === 1 && selectBriefingRumors(briefingRumors, ['new'])[0].id === 'new', '구매 직후 브리핑에 이전 정보가 섞입니다.')
@@ -109,7 +110,7 @@ assert(closingState.feedback.amount === closingSale.proceeds && closingState.fee
 useGameStore.getState().restart()
 const settlementMarket = generateMarketCycle({ cycle: 1, seed: 1201 })
 useGameStore.getState().loadMarket(settlementMarket)
-useGameStore.setState({ phase: 'settlement', cycle: 1, day: 7, cash: 50000, debt: 165000, holdings: {}, activeScene: null })
+useGameStore.setState({ phase: 'settlement', cycle: 1, day: 7, cash: 50000, debt: INITIAL_DEBT, holdings: {}, activeScene: null })
 const nextSettlement = useGameStore.getState().settleCycle(20000)
 assert(nextSettlement?.result === 'next' && useGameStore.getState().cash === 30000, '1주차 상환액이 현금에서 차감되지 않았습니다.')
 const secondMarket = generateMarketCycle({ cycle: 2, seed: 2202, companyIds: settlementMarket.companyIds })
