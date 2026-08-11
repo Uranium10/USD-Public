@@ -1,0 +1,39 @@
+{
+  "name": "usd",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "check:coin": "node scripts/check-coin-balance.mjs",
+    "check:stock-path": "node scripts/check-stock-path-progression.mjs",
+    "check:story-systems": "node scripts/check-story-systems.mjs",
+    "check:session": "node --env-file=.env.local scripts/check-session-persistence.mjs",
+    "check:restart-protection": "node --env-file=.env.local scripts/check-restart-protection.mjs",
+    "check:ai": "node --env-file=.env.local scripts/test-ai-models.mjs",
+    "check:ai-cost": "node --env-file=.env.local scripts/check-ai-cost.mjs",
+    "check:ai-persistence": "node --env-file=.env.local scripts/check-ai-persistence.mjs",
+    "benchmark:weekly-runs": "node --env-file=.env.local scripts/benchmark-weekly-runs.mjs",
+    "gen:run-plan-pool": "node --env-file=.env.local scripts/generate-run-plan-pool.mjs",
+    "lint": "oxlint",
+    "preview": "vite preview",
+    "db:migrate": "node --env-file=.env.local scripts/migrate.js"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.116.0",
+    "@google/genai": "^2.16.0",
+    "@libsql/client": "^0.17.4",
+    "openai": "^7.4.0",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
+    "zustand": "^5.0.14"
+  },
+  "devDependencies": {
+    "@types/react": "^19.2.17",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^6.0.4",
+    "oxlint": "^1.75.0",
+    "vite": "^8.2.0"
+  }
+}
