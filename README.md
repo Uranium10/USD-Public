@@ -1,4 +1,4 @@
-Play: https://usd-pilot.vercel.app/
+Play: https://usd-public.vercel.app/
 
 
 # U.S.D
